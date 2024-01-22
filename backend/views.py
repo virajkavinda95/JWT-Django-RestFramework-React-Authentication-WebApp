@@ -30,3 +30,16 @@ def dashboard(request):
         return Response({"response": response}, status=status.HTTP_200_OK)
     
     return Response({"response": "error"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET','POST'])
+@permission_classes([IsAuthenticated])
+def testAPIEndPoint(request):
+    if request.method == "GET":
+        data = f"hey {request.user}, your API reponded to GET request"
+        return Response({"response":data}, status=status.HTTP_200_OK)
+    elif request.method == 'POST':
+        text = request.POST.get("text")
+        data = f"hey {request.user}, your API responded to POST request with text: {text}"
+        return Response({"response":data}, status=status.HTTP_200_OK)
+    return Response({"error": "Error"}, status.HTTP_400_BAD_REQUEST)
