@@ -1,26 +1,27 @@
 import { createContext, useState, useEffect } from "react";
+// import jwtDecode from "jwt-decode";
 import jwt_decode from "jwt-decode";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
 export default AuthContext;
 
 export const AuthProvider = ({ children }) => {
-  const [authToken, setAuthToken] = useState(() => {
+  const [authToken, setAuthToken] = useState(() =>
     localStorage.getItem("authTokens")
       ? JSON.parse(localStorage.getItem("authTokens"))
-      : null;
-  });
+      : null
+  );
 
-  const [user, setUser] = useState(() => {
+  const [user, setUser] = useState(() =>
     localStorage.getItem("authTokens")
       ? jwt_decode(localStorage.getItem("authTokens"))
-      : null;
-  });
+      : null
+  );
 
   const [loading, setLoading] = useState(true);
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const loginUser = async (email, password) => {
     const response = await fetch("http://127.0.0.1:8000/api/token/", {
@@ -44,7 +45,7 @@ export const AuthProvider = ({ children }) => {
       setAuthToken(data);
       setUser(jwt_decode(data.access));
       localStorage.setItem("authTokens", JSON.stringify(data));
-      history.push("/dashboard");
+      navigate("/dashboard");
     } else {
       console.log(response.status);
       console.log("there is a server issue");
@@ -67,7 +68,7 @@ export const AuthProvider = ({ children }) => {
     });
 
     if (response.status === 201) {
-      history.push("/login");
+      navigate("/login");
     } else {
       console.log(response.status);
       console.log("there is a server issue");
@@ -79,7 +80,7 @@ export const AuthProvider = ({ children }) => {
     setAuthToken(null);
     setUser(null);
     localStorage.removeItem("authTokens");
-    history.push("/login");
+    navigate("/login");
   };
 
   const ContextData = {
