@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }) => {
     if (response.status === 201) {
       navigate("/login");
     } else {
-      console.log(response.status);
+      console.log(response);
       console.log("there is a server issue");
       alert("Something went wrong");
     }
